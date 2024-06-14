@@ -1,12 +1,15 @@
 'use client'
-import { useState } from 'react'
+import { use, useState } from 'react'
 import ModalLogin from '../ModalLogin'
 import styles from './styles.module.css'
+import { UserContext } from 'app/context/user'
 
 
 export default function Header() {
   const [showLogin, setShowLogin] = useState<boolean>(false)
   const [showCreate, setShowCreate] = useState<boolean>(false)
+  const { name, token, updateUser } = use(UserContext)
+
 
   return (
     <header className={styles.header}>

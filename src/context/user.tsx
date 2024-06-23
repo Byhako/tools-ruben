@@ -3,7 +3,6 @@ import { createContext, useCallback, useState } from "react";
 interface Props {
   name: string
   token: string
-  updateUser: ({ name, token }: Props) => void
 }
 
 export const UserContext = createContext({
@@ -16,7 +15,10 @@ export function UserContextProvider({ children }: { children: React.ReactNode}) 
   const [name, setName] = useState<string>('')
   const [token, setToken] = useState<string>('')
 
+  //TODO: read cookie and update user
+
   const updateUser = useCallback(({ name, token }: Props) => {
+    //TODO: save token and name in cookie
     setName(name)
     setToken(token)
   }, [])

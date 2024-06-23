@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "app/components/Header";
 import { Footer } from "app/components/Footer";
+import { UserContextProvider } from "app/context/user";
 
 const roboto = Roboto({ weight: ['400', '700'], subsets: ["latin"] });
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={roboto.className}>
-        <Header />
-        <div className='globalContainer'>
-          {children}
-        </div>
-        <Footer />
+        <UserContextProvider>
+          <Header />
+          <div className='globalContainer'>
+            {children}
+          </div>
+          <Footer />
+        </UserContextProvider>
       </body>
     </html>
   );

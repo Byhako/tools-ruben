@@ -5,15 +5,20 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #444;
-  border: none;
-  padding: 20px 20px 15px;
+  background-color: var(--color_black);
+  padding: 4px 20px 15px;
   border-radius: 2px;
   width: 300px;
-  border: 1px solid #111;
+  border: 2px solid var(--color_light_gray);
+  border-top: none;
+  border-right: none;
   z-index: 1;
-  /* top: -171px */
-  transition: top 0.8s cubic-bezier(.22,.75,.62,.87);
+  transition: top 0.5s cubic-bezier(.22,.75,.62,.87);
+}
+
+.modal>h1 {
+  margin: 10px 0 20px;
+  color: var(--color_secondary);
 }
 
 .modal input {

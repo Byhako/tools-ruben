@@ -7,23 +7,23 @@
   }
   
 .primary {
-  background-color: #aa00ff;
+  background-color: var(--color_primary);
   color: #fff;
-  border-bottom: 3px solid #4a026e;
-  border-right: 3px solid #4a026e;
+  border-bottom: 3px solid var(--color_dark_primary);
+  border-right: 3px solid var(--color_dark_primary);
 }
 
 .primary:hover {
-  background-color: #8a03ce;
+  background-color: var(--color_hover_primary);
 }
 
 .secondary {
   background-color: #fff;
-  color: #aa00ff;
-  border: 2px solid #4a026e;
+  color: var(--color_primary);
+  border: 2px solid var(--color_dark_primary);
 }
 .secondary:hover {
-  background-color: #efe0f7;
+  background-color: var(--color_secondary);
 }
 
 

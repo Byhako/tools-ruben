@@ -1,12 +1,18 @@
 'use client'
 import styles from './styles.module.css'
 import Button from '../Button'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import loginUser from 'app/server/api/loginUser'
+import { useRouter } from 'next/navigation'
+import { UserContext } from 'app/context/user'
 
 export default function ModalLogin(
   { show, setShow, rol }: { show: boolean, setShow: (b: boolean) => void, rol: string }
 ) {
   const [top, setTop] = useState<string>('-171px')
+  const [showError, setShowError] = useState(false)
+  const { updateUser } = useContext(UserContext)
+  const router = useRouter()
 
   useEffect(() => {
     if (show) {
@@ -16,13 +22,30 @@ export default function ModalLogin(
     }
   }, [show])
 
-  
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    setShowError(false)
+
     const formData = new FormData(e.target)
-    const data = Object.values(Object.fromEntries(formData))
-    if (!data.some((text) => text === '')) {
-      console.log(data)
+    const data = {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string
+    }
+    const keys = Object.values(data)
+    if (!keys.some((text) => text === '')) {
+      const { isValid, token } = loginUser({
+        email: data.email,
+        password: data.password
+      })
+
+      if (isValid) {
+        updateUser({ name: data.email, token })
+        router.push('/home')
+        setTop('-171px')
+        //TODO:  clean inputs
+      } else {
+        setShowError(true)
+      }
     }
   }
 

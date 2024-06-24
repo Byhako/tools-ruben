@@ -4,12 +4,13 @@ import { useRouter, usePathname } from 'next/navigation'
 import ModalLogin from '../ModalLogin'
 import styles from './styles.module.css'
 import { UserContext } from 'app/context/user'
+import capitalize from 'app/utils/capitalize'
 
 
 export default function Header() {
   const [showLogin, setShowLogin] = useState<boolean>(false)
   const [showCreate, setShowCreate] = useState<boolean>(false)
-  const { name } = useContext(UserContext)
+  const { name, updateUser } = useContext(UserContext)
 
   const router = useRouter()
   const pathname = usePathname()
@@ -23,6 +24,16 @@ export default function Header() {
     }
   }, [])
 
+  const handleLogin = () => {
+    if (name) {
+      updateUser({ name: '', token: '' })
+      router.push('/')
+    } else {
+      setShowLogin(!showLogin)
+      setShowCreate(false)
+    }
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.content}>
@@ -34,7 +45,7 @@ export default function Header() {
         </button>
 
         {name && (
-          <h3>Hola {name}</h3>
+          <h3 className={styles.userName}>Hola {capitalize(name)}</h3>
         )}
 
         <div>
@@ -45,10 +56,10 @@ export default function Header() {
           </button>
           <button
             className={styles.buttonLogin}
-            onClick={() => {setShowLogin(!showLogin); setShowCreate(false)}}
+            onClick={handleLogin}
           >
             {name ? (
-              <>Logout</>  //TODO: funcion logout
+              <>Logout</>
             ) : (
               <>Login</>
             )}

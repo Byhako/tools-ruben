@@ -43,3 +43,10 @@
 .content button:hover {
   border-color: #fff;
 }
+
+.userName {
+  color: var(--color_secondary);
+  position: absolute;
+  left: 50%;
+  font-size: 22px;
+}

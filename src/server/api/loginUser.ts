@@ -1,18 +1,20 @@
 import bcrypt from 'bcryptjs'
 
-const user = {
-  email: 'ruben',
-  password: '$2a$10$QXW9YqZFHkQmJhRfXP51.OKq3zhedBdZIguzAvgbbPtcU0O4mNs92'
+const User = {
+  user: 'ruben',
+  token: '$2a$10$QXW9YqZFHkQmJhRfXP51.OKq3zhedBdZIguzAvgbbPtcU0O4mNs92'
 }
 
 export default function loginUser(
-  { email, password }: {email: string, password: string}
+  { user, password }: {user: string, password: string}
 ){
   let isValid = false
 
-  if (email === user.email) {
-    isValid = bcrypt.compareSync(password, user.password)
+  //TODO: get user from db
+
+  if (user === User.user) {
+    isValid = bcrypt.compareSync(password, User.token)
   }
 
-  return { isValid, token: user.password }
+  return { isValid, token: User.token, error: 'Datos incorrectos' }
 }

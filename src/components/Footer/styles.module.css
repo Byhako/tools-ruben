@@ -11,5 +11,6 @@
 
 .Footer p {
   display: flex;
+  color: var(--color_light_gray);
   align-items: center;
 }

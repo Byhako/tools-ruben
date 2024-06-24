@@ -5,12 +5,17 @@ import { useContext, useEffect, useState } from 'react'
 import loginUser from 'app/server/api/loginUser'
 import { useRouter } from 'next/navigation'
 import { UserContext } from 'app/context/user'
+import createUser from 'app/server/api/createUser'
 
-export default function ModalLogin(
-  { show, setShow, rol }: { show: boolean, setShow: (b: boolean) => void, rol: string }
-) {
-  const [top, setTop] = useState<string>('-171px')
-  const [showError, setShowError] = useState(false)
+interface Props {
+  show: boolean
+  setShow: (b: boolean) => void, rol: string
+}
+
+export default function ModalLogin({ show, setShow, rol }: Props) {
+  const [top, setTop] = useState<string>('-180px')
+  const [error, setError] = useState<string>('')
+  const [data, setData] = useState({ user: '', password: '' })
   const { updateUser } = useContext(UserContext)
   const router = useRouter()
 
@@ -18,50 +23,70 @@ export default function ModalLogin(
     if (show) {
       setTop('68px')
     } else {
-      setTop('-171px')
+      setTop('-180px')
     }
   }, [show])
 
+  const handleUser = rol === 'login' ? loginUser : createUser
+
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    setShowError(false)
+    setError('')
 
-    const formData = new FormData(e.target)
-    const data = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string
-    }
     const keys = Object.values(data)
     if (!keys.some((text) => text === '')) {
-      const { isValid, token } = loginUser({
-        email: data.email,
+      const { isValid, token, error } = handleUser({
+        user: data.user,
         password: data.password
       })
 
       if (isValid) {
-        updateUser({ name: data.email, token })
+        updateUser({ name: data.user, token })
         router.push('/home')
-        setTop('-171px')
-        //TODO:  clean inputs
+        setShow(false)
+        setData({ user: '', password: ''})
       } else {
-        setShowError(true)
+        setError(error)
       }
     }
+  }
+
+  const handleCancel = () => {
+    setShow(false)
+    setError('')
+    setData({ user: '', password: ''})
   }
 
   return (
     <form className={styles.modal} onSubmit={handleSubmit} style={{ top }}>
       <h1>{rol === 'login' ? 'Login': 'Crea tu cuenta'}</h1>
-      <input required type="text" name="email" placeholder="Correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" />
-      <input required type="password" name="password" placeholder="Contraseña" />
+      <input
+        required
+        type="text"
+        name="user"
+        placeholder="Usuario"
+        value={data.user}
+        onChange={(e) => setData({ ...data, user: e.target.value })}
+      />
+      <input
+        required
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        value={data.password}
+        onChange={(e) => setData({ ...data, password: e.target.value })}
+      />
       <div>
         <Button
           type='button'
           color='secondary'
-          handleClick={() => {setShow(false); document.querySelector('form')?.reset()}}
+          handleClick={handleCancel}
         >Cancelar</Button>
         <Button type='submit'>Enviar</Button>
       </div>
+      <small className={styles.error}>
+        {Boolean(error) && <>{error}</>}
+      </small>
     </form>
   )
 }

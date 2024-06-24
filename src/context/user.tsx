@@ -1,4 +1,5 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { useCookies } from 'react-cookie'
 
 interface Props {
   name: string
@@ -14,13 +15,22 @@ export const UserContext = createContext({
 export function UserContextProvider({ children }: { children: React.ReactNode}) {
   const [name, setName] = useState<string>('')
   const [token, setToken] = useState<string>('')
+  const [cookies, setCookie] = useCookies()
 
-  //TODO: read cookie and update user
+  useEffect(() => {
+    console.log('cookies', cookies['rubenTools'])
+    const cookie = cookies['rubenTools']
+    if (cookie) {
+      setName(cookie.name)
+      setToken(cookie.token)
+    }
+  }, [])
 
   const updateUser = useCallback(({ name, token }: Props) => {
-    //TODO: save token and name in cookie
     setName(name)
     setToken(token)
+
+    setCookie('rubenTools', { name, token })
   }, [])
 
   return (
